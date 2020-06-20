@@ -19,10 +19,15 @@ export default {
       model.detect(vid).then(res => {
         res.forEach(detected => {
           let [x, y, w, h] = detected.bbox;
+          context.strokeStyle = "blue";
           context.beginPath();
           context.rect(x, y, w, h);
           context.stroke();
-          console.log(x, y, w, h);
+          context.fillStyle = "blue";
+          context.fillRect(x, y - 10, 40, 10);
+          context.fillStyle = "white";
+          context.fillText(detected.class, x, y, 40);
+          console.log(detected);
         });
       });
 
@@ -34,9 +39,9 @@ export default {
       navigator.getUserMedia ||
       navigator.webkitGetUserMedia ||
       navigator.mozGetUserMedia;
-    navigator.getUserMedia(
-      { audio: false, video: { width: 800, height: 600 } },
-      stream => {
+    navigator.mediaDevices
+      .getUserMedia({ audio: false, video: { width: 800, height: 600 } })
+      .then(stream => {
         this.$refs.can.width = 800;
         this.$refs.can.height = 600;
         var context = this.$refs.can.getContext("2d");
@@ -52,12 +57,10 @@ export default {
             this.detect(model, this.$refs.vid, context);
           });
         };
-      },
-      error => {
+      })
+      .catch(error => {
         console.log(error);
-        this.$emit();
-      }
-    );
+      });
   }
 };
 </script>
