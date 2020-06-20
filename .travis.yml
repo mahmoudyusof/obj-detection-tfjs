@@ -1,0 +1,27 @@
+language: node_js
+node_js:
+  - 12.16.1
+cache: npm
+
+# before_install:
+install:
+  - npm ci
+
+# before_script: don't know if we should do it here
+script:
+  - npm test
+  - touch .nojekyll
+  - npm run build
+# after_success:
+# after_faliure:
+# after_script:
+# before_deploy:
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  target-branch: master
+  local_dir: dist
+  on:
+    branch: gh-pages
+# after_deploy:
