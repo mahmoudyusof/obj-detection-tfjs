@@ -21,5 +21,8 @@
     "@vue/cli-service": "~4.4.0",
     "@vue/test-utils": "^1.0.3",
     "vue-template-compiler": "^2.6.11"
+  },
+  "vue": {
+    "publicPath": "/obj-detection-tfjs/"
   }
 }
