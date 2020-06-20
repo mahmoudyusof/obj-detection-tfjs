@@ -1,7 +1,7 @@
 <template>
   <div>
-    <video autoplay ref="vid" width="800" height="600" style="display: none;"></video>
-    <canvas ref="can" width="800" height="600"></canvas>
+    <video autoplay ref="vid" :width="width" :height="height" style="display: none;"></video>
+    <canvas ref="can" :width="width" :height="height"></canvas>
   </div>
 </template>
 
@@ -10,9 +10,19 @@ const tf = require("@tensorflow/tfjs");
 const cocoSsd = require("@tensorflow-models/coco-ssd");
 export default {
   name: "web-cam",
+  data: {
+    width: 800,
+    height: 600
+  },
   methods: {
     draw(context) {
-      context.drawImage(this.$refs.vid, 0, 0, 800, 600);
+      context.drawImage(
+        this.$refs.vid,
+        0,
+        0,
+        window.innerWidth,
+        window.innerHeight
+      );
       setTimeout(this.draw, 20, context);
     },
     detect(model, vid, context) {
@@ -35,18 +45,27 @@ export default {
     }
   },
   mounted() {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
     navigator.getUserMedia =
       navigator.getUserMedia ||
       navigator.webkitGetUserMedia ||
       navigator.mozGetUserMedia;
     navigator.mediaDevices
-      .getUserMedia({ audio: false, video: { width: 800, height: 600 } })
+      .getUserMedia({
+        audio: false,
+        video: {
+          facingMode: "environment",
+          width: window.innerWidth,
+          height: window.innerHeight
+        }
+      })
       .then(stream => {
-        this.$refs.can.width = 800;
-        this.$refs.can.height = 600;
+        this.$refs.can.width = window.innerWidth;
+        this.$refs.can.height = window.innerHeight;
         var context = this.$refs.can.getContext("2d");
-        context.width = 800;
-        context.height = 600;
+        context.width = window.innerWidth;
+        context.height = window.innerHeight;
         this.$refs.vid.srcObject = stream;
         this.$refs.vid.onplay = () => {
           this.draw(context);
