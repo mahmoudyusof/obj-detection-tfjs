@@ -37,7 +37,6 @@ export default {
           context.fillRect(x, y - 10, 40, 10);
           context.fillStyle = "white";
           context.fillText(detected.class, x, y, 40);
-          console.log(detected);
         });
       });
 
